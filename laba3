@@ -9,15 +9,19 @@
 # 3 4 
 import random
 
+
 def is_prime(num):
-    if num < 2:return False
-    for i in range(2, int(num**0.5) + 1):
+    if num < 2:
+        return False
+    for i in range(2, int(num ** 0.5) + 1):
         if num % i == 0:
             return False
     return True
 
+
 def create_matrix(N):
     return [[random.randint(-10, 10) for _ in range(N)] for _ in range(N)]
+
 
 def count_primes_in_odd_columns(B):
     count = 0
@@ -27,24 +31,33 @@ def count_primes_in_odd_columns(B):
                 count += 1
     return count
 
+
 def product_of_perimeter_of_submatrix(matrix):
     peri_product = 1
     n = len(matrix)
     m = len(matrix[0])
     for i in range(n):
         for j in range(m):
-            if i == 0 or i == n-1 or j == 0 or j == m-1:
+            if i == 0 or i == n - 1 or j == 0 or j == m - 1:
                 peri_product *= matrix[i][j]
     return peri_product
+
+
+def create_triangle_matrix(N):
+    return [[i + j + 1 if i <= j else 0 for j in range(N)] for i in range(N)]
+
 
 def transpose_matrix(matrix):
     return [list(row) for row in zip(*matrix)]
 
+
 def multiply_matrix_by_scalar(matrix, scalar):
     return [[scalar * cell for cell in row] for row in matrix]
 
+
 def subtract_matrices(A, B):
     return [[A[i][j] - B[i][j] for j in range(len(A[i]))] for i in range(len(A))]
+
 
 def matrix_multiplication(A, B):
     result = [[0 for _ in range(len(B[0]))] for _ in range(len(A))]
@@ -54,10 +67,12 @@ def matrix_multiplication(A, B):
                 result[i][j] += A[i][k] * B[k][j]
     return result
 
+
 def print_matrix(matrix):
     for row in matrix:
         print(' '.join(map(str, row)))
     print()
+
 
 def main():
     K = int(input("Введите число K: "))
@@ -110,6 +125,7 @@ def main():
 
     print("Результат выражения ((К*A)A– KA^T):")
     print_matrix(KAA_minus_KAT)
+
 
 if __name__ == "__main__":
     main()
