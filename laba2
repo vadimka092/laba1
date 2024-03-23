@@ -46,14 +46,3 @@ except ValueError:
 
 print(f"Количество шестнадцатеричных четных чисел, не превышающих 204810 и содержащих количество цифр равное первой цифре: {count_numbers}")
 print(f"Максимальное число: {max_number} ({number_to_words(max_number)})")
-
-            for num in numbers:
-                count_numbers += 1
-                max_number = max(max_number, num)
-
-except ValueError:
-    print("Ошибка: Файл содержит некорректные данные. Очистите файл input.txt.")
-    exit()
-
-print(f"Количество шестнадцатеричных четных чисел, не превышающих 204810 и содержащих количество цифр равное первой цифре: {count_numbers}")
-print(f"Максимальное число: {max_number} ({number_to_words(max_number)})")
