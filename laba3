@@ -50,6 +50,19 @@ def print_matrix(matrix):
     print()
 
 
+def count_primes_in_odd_columns(matrix):
+    return sum(1 for j in range(len(matrix[0])) if j % 2 != 0 for i in range(len(matrix)) if is_prime(matrix[i][j]))
+
+
+def product_of_perimeter_of_submatrix(matrix):
+    return matrix[0][0] * matrix[0][-1] * matrix[-1][0] * matrix[-1][-1]
+
+
+def create_B_matrix(A):
+    mid = len(A) // 2
+    return [row[:mid] for row in A[:mid]]
+
+
 def main():
     K = int(input("Введите число K: "))
     N = int(input("Введите размерность матрицы N: "))
@@ -63,7 +76,7 @@ def main():
     print_matrix(A)
 
     mid = N // 2
-    B = [row[:mid] for row in A[:mid]]
+    B = create_B_matrix(A)
     C = [row[mid:] for row in A[:mid]]
     D = [row[:mid] for row in A[mid:]]
     E = [row[mid:] for row in A[mid:]]
