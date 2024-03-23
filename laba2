@@ -22,7 +22,7 @@ digit_to_word = {
     'F': 'пятнадцать'
 }
 
-file_path = "num1.txt"
+file_path = "text.txt"
 
 def number_to_words(number):
     return ' '.join(digit_to_word[digit] for digit in str(number))
@@ -31,18 +31,24 @@ count_numbers = 0
 max_number = 0
 
 try:
-    with open(file_path, "r") as file:
-        lines = file.read().splitlines()
+    with open("num1.txt", "r") as file:
+        block_size = 1024
+        pattern = r'\b[13579BDF][0-9A-F]{0,3}\b'
 
-        for line in lines:
-            numbers = [int(match.group(), 16) for match in re.finditer(r'\b[13579BDF][0-9A-F]{0,3}\b', line)]
+        block = file.read(block_size)
+
+        while block:
+            numbers = [int(match.group(), 16) for match in re.finditer(pattern, block)]
 
             for num in numbers:
                 count_numbers += 1
                 max_number = max(max_number, num)
+
+            block = file.read(block_size)
+
 except ValueError:
     print("Ошибка: Файл содержит некорректные данные. Очистите файл input.txt.")
     exit()
 
-print(f"Количество шестнадцатеричных четных чисел, не превышающих 204810 и содержащих количество цифр равное первой цифре: {count_numbers}")
+print(f"Количество шестнадцатеричных четных чисел, не превышающих 204810 и содержащих количество цифр равное первой цифр: {count_numbers}")
 print(f"Максимальное число: {max_number} ({number_to_words(max_number)})")
