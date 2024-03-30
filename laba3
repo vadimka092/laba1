@@ -7,7 +7,7 @@
 Каждая из матриц B,C,D,E имеет вид
 Для ИСТд-11:
  1 2
- 3 4 
+ 3 4
 '''
 import random
 
@@ -69,8 +69,8 @@ def main():
     K = int(input("Введите число K: "))
     N = int(input("Введите размерность матрицы N: "))
 
-    if N % 2 != 0:
-        print("N должно быть четным.")
+    if N % 2 == 0:
+        print("N должно быть нечетным.")
         return
 
     A = create_triangle_matrix(N)
@@ -120,3 +120,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
