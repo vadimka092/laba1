@@ -3,51 +3,16 @@
 Шеснадцатиричные четные числа, не превышающие 204810 и содержащие количество цифр равное первой цифре. Вывести числа и их количество. Максимальное число вывести прописью.
 '''
 import re
-'''
-Словарь для преобразования цифр в слова
-'''
+def hex_to_words(hex_num):
+    if int(hex_num, 16) <= 0x400:
+        return ' '.join(digit_to_word.get(d, d) for d in hex_num)
+    else:
+        return "не удовлетворяет условию задачи"
 
-digit_to_word = {
-    '0': 'ноль',
-    '1': 'один',
-    '2': 'два',
-    '3': 'три',
-    '4': 'четыре',
-    '5': 'пять',
-    '6': 'шесть',
-    '7': 'семь',
-    '8': 'восемь',
-    '9': 'девять',
-    'A': 'десять',
-    'B': 'одиннадцать',
-    'C': 'двенадцать',
-    'D': 'тринадцать',
-    'E': 'четырнадцать',
-    'F': 'пятнадцать'
-}
+pattern = re.compile(r'\b[13579BDF][0-9A-F]{0,7}[02468ACE]\b', re.IGNORECASE)
 
-file_path = "text.txt"
-
-def number_to_words(number):
-    return ' '.join(digit_to_word[digit] for digit in str(number))
-
-count_numbers = 0
-max_number = 0
-
-try:
-    with open(file_path, "r") as file:
-        # Регулярное выражение для поиска четных шестнадцатеричных чисел, не превышающих 204810 и содержащих количество цифр равное первой цифре
-        pattern = r'\b[2468ACE][0-9A-F]{0,3}\b'
-        numbers = [int(match.group(), 16) for match in re.finditer(pattern, file.read())]
-
-        for num in numbers:
-            if num <= 204810 and len(str(num)) == int(str(num)[0], 16):
-                count_numbers += 1
-                max_number = max(max_number, num)
-
-except ValueError:
-    print("Ошибка: Файл содержит некорректные данные. Очистите файл input.txt.")
-    exit()
-
-print(f"Количество шестнадцатеричных четных чисел, не превышающих 204810 и содержащих количество цифр равное первой цифре: {count_numbers}")
-print(f"Максимальное число: {max_number} ({number_to_words(max_number)})")
+with open('num2.txt', 'r') as f:
+    matches = pattern.findall(f.read())
+    max_num = max(matches, key=lambda x: int(x, 16))
+    print(f"Максимальное число: {max_num}: {hex_to_words(max_num)}")
+    print(f"Всего чисел: {len(matches)}")
