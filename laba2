@@ -26,15 +26,18 @@ def hex_to_words(hex_num):
     if int(hex_num, 16) <= 0x400:
         return ' '.join(digit_to_word.get(d, d) for d in hex_num)
     else:
-        return "не удовлетворяет условию задачи"
+        return hex_num
 
-pattern = re.compile(r'\b[13579BDF][0-9A-F]{0,7}[02468ACE]\b', re.IGNORECASE)
+pattern = re.compile(r'\b[0123456789ABCDE][0-9A-F]{0,6}[02468ACE]\b', re.IGNORECASE)
 
 with open('test.txt', 'r') as f:
     matches = pattern.findall(f.read())
-    max_num = max(matches, key=lambda x: int(x, 16))
-    print(f"Максимальное число: {max_num}: {hex_to_words(max_num)}")
-    print(f"Все числа:")
-    for match in matches:
-        print(f"- {match}: {hex_to_words(match)}")
-    print(f"Всего чисел: {len(matches)}")
+    if matches:
+        max_num = max(matches, key=lambda x: int(x, 16))
+        print(f"Максимальное число: {max_num}: {hex_to_words(max_num)}")
+        print(f"Все числа, удовлетворяющие условию:")
+        for match in matches:
+            print(f"- {match}")
+        print(f"Всего чисел, удовлетворяющих условию: {len(matches)}")
+    else:
+        print("Файл не содержит чисел, удовлетворяющих условию.")
