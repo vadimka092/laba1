@@ -30,7 +30,7 @@ def hex_to_words(hex_num):
 
 pattern = re.compile(r'\b[0123456789ABCDE][0-9A-F]{0,6}[02468ACE]\b', re.IGNORECASE)
 
-with open('test.txt', 'r') as f:
+with open('num1.txt', 'r') as f:
     matches = pattern.findall(f.read())
     if matches:
         max_num = max(matches, key=lambda x: int(x, 16))
