@@ -37,7 +37,8 @@ with open('num1.txt', 'r') as f:
         print(f"Максимальное число: {max_num}: {hex_to_words(max_num)}")
         print(f"Все числа, удовлетворяющие условию:")
         for match in matches:
-            print(f"- {match}")
+            if int(match, 16) <= 0x400:
+                print(f"- {match}")
         print(f"Всего чисел, удовлетворяющих условию: {len(matches)}")
     else:
         print("Файл не содержит чисел, удовлетворяющих условию.")
