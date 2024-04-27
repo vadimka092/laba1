@@ -6,21 +6,18 @@ import timeit
 import matplotlib.pyplot as plt
 
 """
-Кэш для хранения вычисленных значений факториалов
-"""
-cache_F = {1: 4, 2: 5}
-
-"""
 Динамическая функция для вычисления F(n)
 """
-def dynamic_F(n, k=1, cache=cache_F):
-    if n in cache:
-        return cache[n]
+def dynamic_F(n, k=1):
+    if n == 1:
+        return 1
+    elif n == 2:
+        return 2
+    elif n == 3:
+        return 3
     else:
         k = -1
-        result = k * ((dynamic_F(n-1, k, cache) - dynamic_F(n-2, k, cache)) / dynamic_factorial(2*n))
-        cache[n] = result
-        return result
+        return k * ((dynamic_F(n-1, k) - dynamic_F(n-2, k)) / (2*n))
 
 """
 Рекурсивная функция для вычисления факториала
@@ -35,13 +32,10 @@ def recursive_factorial(n):
 Динамическая функция для вычисления факториала
 """
 def dynamic_factorial(n):
-    if n in cache_F:
-        return cache_F[n]
-
+    result = 1
     for i in range(2, n + 1):
-        cache_F[i] = cache_F[i - 1] * i
-
-    return cache_F[n]
+        result *= i
+    return result
 
 """
 Итеративная функция для вычисления факториала
