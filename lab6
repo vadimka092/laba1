@@ -1,0 +1,70 @@
+
+
+import time
+import itertools
+def generate_all_numbers_algorithm(digits):
+    """Генерация всех возможных целых чисел из заданных цифр (алгоритмический метод)."""
+    if len(digits) == 0:
+        return []
+    result = []
+    for i in range(len(digits)):
+        digit = digits[i]
+        remaining_digits = digits[:i] + digits[i + 1:]
+        for number in generate_all_numbers_algorithm(remaining_digits):
+            result.append(int(str(digit) + str(number)))
+    return result
+
+def generate_all_numbers_builtin(digits):
+    """Генерация всех возможных целых чисел из заданных цифр (с использованием встроенных функций Питона)."""
+    return [int(''.join(permutation)) for permutation in itertools.permutations(digits)]
+
+def measure_time(algorithmic_approach, builtin_approach, digits):
+    """Измерение времени выполнения двух подходов."""
+    start_time_alg = time.time()
+    algorithmic_result = algorithmic_approach(digits)
+    end_time_alg = time.time()
+    time_alg = end_time_alg - start_time_alg
+
+    start_time_builtin = time.time()
+    builtin_result = builtin_approach(digits)
+    end_time_builtin = time.time()
+    time_builtin = end_time_builtin - start_time_builtin
+
+    return algorithmic_result, time_alg, builtin_result, time_builtin
+
+# Усложнение: ограничение на характеристики объектов - каждая цифра должна быть использована только один раз
+# Целевая функция: минимизация количества переборов
+
+def generate_all_numbers_optimized(digits):
+    """Генерация всех возможных целых чисел из заданных цифр с учетом ограничения и оптимизацией."""
+    if len(digits) == 0:
+        return []
+    result = []
+    for i in range(len(digits)):
+        digit = digits[i]
+        remaining_digits = digits[:i] + digits[i + 1:]
+        for number in generate_all_numbers_optimized(remaining_digits):
+            if digit not in number:
+                result.append(int(str(digit) + str(number)))
+    return result
+
+digits = input("Введите цифры через пробел: ").split()
+
+# Часть 1: Генерация всех возможных целых чисел без учета ограничения
+print("Часть 1: Генерация всех возможных целых чисел без учета ограничения")
+algorithmic_result, time_alg, builtin_result, time_builtin = measure_time(generate_all_numbers_algorithm, generate_all_numbers_builtin, digits)
+print("Все возможные целые числа (алгоритмический метод):")
+for number in algorithmic_result:
+    print(number)
+print("Время выполнения (алгоритмический метод): {:.8f}".format(time_alg))
+print("Все возможные целые числа (метод с использованием встроенных функций):")
+for number in builtin_result:
+    print(number)
+print("Время выполнения (метод с использованием встроенных функций): {:.8f}".format(time_builtin))
+
+# Часть 2: Генерация всех возможных целых чисел с учетом ограничения и оптимизацией
+print("\nЧасть 2: Генерация всех возможных целых чисел с учетом ограничения и оптимизацией")
+optimized_result = generate_all_numbers_optimized(digits)
+print("Все возможные целые числа с учетом ограничения:")
+for number in optimized_result:
+    print(number)
