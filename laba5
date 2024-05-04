@@ -8,16 +8,17 @@ import matplotlib.pyplot as plt
 """
 Кэш для хранения вычисленных значений факториалов
 """
-cache_F = {1: 4, 2: 5}
+cache_F = {}
 """
-Динамическая функция для вычисления F(n)
+Итеративная функция для вычисления F(n)
 """
 def dynamic_F(n, k=1, cache=cache_F):
     if n in cache:
         return cache[n]
     else:
-        k *= -1
-        result = k * ((dynamic_F(n-1, k, cache) - dynamic_F(n-2, k, cache)) / dynamic_factorial(2*n))
+        result = 0
+        for i in range(1, n+1):
+            result += k * ((dynamic_F(i-1, k, cache) - dynamic_F(i-2, k, cache)) / dynamic_factorial(2*i))
         cache[n] = result
         return result
 
@@ -34,14 +35,16 @@ def recursive_factorial(n):
 """
 Динамическая функция для вычисления факториала
 """
-def dynamic_factorial(n):
-    if n in cache_F:
-        return cache_F[n]
+def dynamic_factorial(n, cache=cache_F):
+    if n in cache:
+        return cache[n]
+    else:
+        result = 1
+        for i in range(1, n+1):
+            result *= i
+        cache[n] = result
+        return result
 
-    for i in range(2, n + 1):
-        cache_F[i] = cache_F[i - 1] * i
-
-    return cache_F[n]
 """
 Итеративная функция для вычисления факториала
 """
