@@ -4,74 +4,68 @@
 2 часть – усложнить написанную программу, введя по своему усмотрению в условие минимум одно ограничение на характеристики объектов (которое будет сокращать количество переборов)  и целевую функцию для нахождения оптимального  решения.
 Вариант 30. Вводятся К цифр. Составьте все возможные целые числа из этих цифр. Каждая цифра используется только 1 раз.
 """
-
-
-import time
 import itertools
-def generate_all_numbers_algorithm(digits):
-    """Генерация всех возможных целых чисел из заданных цифр (алгоритмический метод)."""
-    if len(digits) == 0:
-        return []
-    result = []
-    for i in range(len(digits)):
-        digit = digits[i]
-        remaining_digits = digits[:i] + digits[i + 1:]
-        for number in generate_all_numbers_algorithm(remaining_digits):
-            result.append(int(str(digit) + str(number)))
-    return result
+import time
+# Алгоритмический подход
+def generate_integers_algorithmic(digits, S):
+    # Преобразуем список цифр в строку
+    digits_str = ''.join(digits)
 
-def generate_all_numbers_builtin(digits):
-    """Генерация всех возможных целых чисел из заданных цифр (с использованием встроенных функций Питона)."""
-    return [int(''.join(permutation)) for permutation in itertools.permutations(digits)]
+    # Генерируем все возможные перестановки цифр
+    permutations = list(itertools.permutations(digits_str))
 
-def measure_time(algorithmic_approach, builtin_approach, digits):
-    """Измерение времени выполнения двух подходов."""
-    start_time_alg = time.time()
-    algorithmic_result = algorithmic_approach(digits)
-    end_time_alg = time.time()
-    time_alg = end_time_alg - start_time_alg
+    # Фильтруем перестановки по сумме цифр
+    valid_permutations = [permutation for permutation in permutations if sum(int(digit) for digit in permutation) >= S]
 
-    start_time_builtin = time.time()
-    builtin_result = builtin_approach(digits)
-    end_time_builtin = time.time()
-    time_builtin = end_time_builtin - start_time_builtin
+    # Преобразуем каждую валидную перестановку в целое число
+    integers = [int(''.join(permutation)) for permutation in valid_permutations]
 
-    return algorithmic_result, time_alg, builtin_result, time_builtin
+    # Возвращаем список целых чисел
+    return integers
 
-# Усложнение: ограничение на характеристики объектов - каждая цифра должна быть использована только один раз
-# Целевая функция: минимизация количества переборов
+# С использованием функций Python
+def generate_integers_pythonic(digits, S):
+    # Преобразуем список цифр в строку
+    digits_str = ''.join(digits)
 
-def generate_all_numbers_optimized(digits):
-    """Генерация всех возможных целых чисел из заданных цифр с учетом ограничения и оптимизацией."""
-    if len(digits) == 0:
-        return []
-    result = []
-    for i in range(len(digits)):
-        digit = digits[i]
-        remaining_digits = digits[:i] + digits[i + 1:]
-        for number in generate_all_numbers_optimized(remaining_digits):
-            if digit in number:
-                result.append(int(str(digit) + str(number)))
-    return result
+    # Генерируем все возможные перестановки цифр с помощью itertools.permutations
+    permutations = itertools.permutations(digits_str)
+
+    # Фильтруем перестановки по сумме цифр
+    valid_permutations = [permutation for permutation in permutations if sum(int(digit) for digit in permutation) >= S]
+
+    # Преобразуем каждую валидную перестановку в целое число
+    integers = [int(''.join(permutation)) for permutation in valid_permutations]
+
+    # Возвращаем список целых чисел
+    return integers
+
+# Получение ввода от пользователя
+K = int(input("Введите количество цифр: "))
+digits = [input("Введите цифру {}: ".format(i + 1)) for i in range(K)]
+S = int(input("Введите минимальную сумму цифр: "))
+
+# Замеряем время выполнения алгоритмического подхода
+start_time_algorithmic = time.time()
+integers_algorithmic = generate_integers_algorithmic(digits, S)
+end_time_algorithmic = time.time()
+
+# Замеряем время выполнения способа с использованием функций Python
+start_time_pythonic = time.time()
+integers_pythonic = generate_integers_pythonic(digits, S)
+end_time_pythonic = time.time()
+
+# Вывод результатов
+print("Все возможные целые числа (алгоритмический подход):", integers_algorithmic)
+print("Время выполнения алгоритмического подхода: {:.6f} секунд".format(end_time_algorithmic - start_time_algorithmic))
+
+print("Все возможные целые числа (способ с использованием функций Python):", integers_pythonic)
+print("Время выполнения способа с использованием функций Python: {:.6f} секунд".format(end_time_pythonic - start_time_pythonic))
+
+# Находим максимальное целое число
+max_integer = max(integers_algorithmic)
+
+# Выводим результат
+print("Максимальное целое число, которое можно составить из данных цифр с учетом ограничения на сумму цифр:", max_integer)
 
 
-digits = input("Введите цифры через пробел: ").split()
-
-# Часть 1: Генерация всех возможных целых чисел без учета ограничения
-print("Часть 1: Генерация всех возможных целых чисел без учета ограничения")
-algorithmic_result, time_alg, builtin_result, time_builtin = measure_time(generate_all_numbers_algorithm, generate_all_numbers_builtin, digits)
-print("Все возможные целые числа (алгоритмический метод):")
-for number in algorithmic_result:
-    print(number)
-print("Время выполнения (алгоритмический метод): {:.8f}".format(time_alg))
-print("Все возможные целые числа (метод с использованием встроенных функций):")
-for number in builtin_result:
-    print(number)
-print("Время выполнения (метод с использованием встроенных функций): {:.8f}".format(time_builtin))
-
-# Часть 2: Генерация всех возможных целых чисел с учетом ограничения и оптимизацией
-print("\nЧасть 2: Генерация всех возможных целых чисел с учетом ограничения и оптимизацией")
-optimized_result = generate_all_numbers_optimized(digits)
-print("Все возможные целые числа с учетом ограничения:")
-for number in optimized_result:
-    print(number)
