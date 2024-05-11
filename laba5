@@ -1,6 +1,6 @@
 """
 Задана рекуррентная функция. Область определения функции – натуральные числа. Написать программу сравнительного вычисления данной функции рекурсивно и итерационно. Определить границы применимости рекурсивного и итерационного подхода. Результаты сравнительного исследования времени вычисления представить в табличной и графической форме.
-F(1) = 4; F(2) = 5; F(n) = (-1)n*(F(n-1)- F(n-2) /(2n)!) при n > 2.
+F(1) = 1; F(2) = 2; F(3) = 3, F(n) = (-1)n*(F(n-3)*(n-1) /(2n)!) при n > 3.
 """
 import matplotlib.pyplot as plt
 import time
@@ -14,13 +14,13 @@ def factorial(n):
     return factorial_cache[n]
 
 # Мемоизация для функции F
-F_cache = {1: 4, 2: 5}
+F_cache = {1: 1, 2: 2, 3: 3}
 
 # Рекурсивный подход с использованием мемоизации
 def recursive_F(n):
     if n not in F_cache:
         sign = -1 if n % 2 else 1
-        F_cache[n] = sign * (recursive_F(n - 1) - recursive_F(n - 2)) / factorial(2 * n)
+        F_cache[n] = sign * (recursive_F(n - 3) * (n - 1)) / factorial(2 * n)
     return F_cache[n]
 
 # Итеративный подход с использованием кэша факториала
@@ -28,11 +28,11 @@ def iterative_F(n):
     if n in F_cache:
         return F_cache[n]
 
-    f0, f1 = 4, 5
-    for i in range(3, n + 1):
+    f0, f1, f2, f3 = 1, 2, 3, 3
+    for i in range(4, n + 1):
         sign = -1 if i % 2 else 1
-        fi = sign * (f1 - f0) / factorial(2 * i)
-        f0, f1 = f1, fi
+        fi = sign * (f3 * (i - 1)) / factorial(2 * i)
+        f0, f1, f2, f3 = f1, f2, f3, fi
         F_cache[i] = fi
 
     return F_cache[n]
