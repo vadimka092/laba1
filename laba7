@@ -12,9 +12,16 @@ import itertools
 import time
 from tkinter import Tk, Entry, Button, Label, Text, Scrollbar
 
-def generate_integers(digits, S):
+def generate_integers_algorithmic(digits, S):
     digits_str = ''.join(digits)
     permutations = list(itertools.permutations(digits_str))
+    valid_permutations = [permutation for permutation in permutations if sum(int(digit) for digit in permutation) >= S]
+    integers = [int(''.join(permutation)) for permutation in valid_permutations]
+    return integers
+
+def generate_integers_pythonic(digits, S):
+    digits_str = ''.join(digits)
+    permutations = itertools.permutations(digits_str)
     valid_permutations = [permutation for permutation in permutations if sum(int(digit) for digit in permutation) >= S]
     integers = [int(''.join(permutation)) for permutation in valid_permutations]
     return integers
@@ -24,11 +31,20 @@ def calculate_and_display():
     digits = [entry_digits[i].get() for i in range(K)]
     S = int(entry_S.get())
 
-    start_time = time.time()
-    integers = generate_integers(digits, S)
-    end_time = time.time()
+    # Алгоритмический подход
+    start_time_algorithmic = time.time()
+    integers_algorithmic = generate_integers_algorithmic(digits, S)
+    end_time_algorithmic = time.time()
 
-    result_text = f"Все возможные целые числа:\n{integers}\nВремя выполнения: {end_time - start_time:.6f} секунд\nМаксимальное целое число: {max(integers)}"
+    # Подход с использованием функций Python
+    start_time_pythonic = time.time()
+    integers_pythonic = generate_integers_pythonic(digits, S)
+    end_time_pythonic = time.time()
+
+    result_text = f"Все возможные целые числа (алгоритмический подход):\n{integers_algorithmic}\nВремя выполнения алгоритмического подхода: {end_time_algorithmic - start_time_algorithmic:.6f} секунд\n\n"
+    result_text += f"Все возможные целые числа (подход с использованием функций Python):\n{integers_pythonic}\nВремя выполнения подхода с использованием функций Python: {end_time_pythonic - start_time_pythonic:.6f} секунд\n\n"
+    result_text += f"Максимальное целое число: {max(integers_algorithmic)}"
+
     output_text.config(state='normal')
     output_text.delete('1.0', 'end')
     output_text.insert('end', result_text)
