@@ -10,76 +10,83 @@
 
 import itertools
 import time
-from tkinter import Tk, Entry, Button, Label, Text, Scrollbar
+from tkinter import Tk, Entry, Button, Label, Text, Scrollbar, Toplevel
 
-def generate_integers_algorithmic(digits, S):
-    digits_str = ''.join(digits)
-    permutations = list(itertools.permutations(digits_str))
-    valid_permutations = [permutation for permutation in permutations if sum(int(digit) for digit in permutation) >= S]
-    integers = [int(''.join(permutation)) for permutation in valid_permutations]
-    return integers
-
-def generate_integers_pythonic(digits, S):
-    digits_str = ''.join(digits)
-    permutations = itertools.permutations(digits_str)
-    valid_permutations = [permutation for permutation in permutations if sum(int(digit) for digit in permutation) >= S]
-    integers = [int(''.join(permutation)) for permutation in valid_permutations]
+def generate_integers(digits, S):
+    permutations = itertools.permutations(digits)
+    valid_permutations = [perm for perm in permutations if sum(int(digit) for digit in perm) >= S]
+    if not valid_permutations:
+        return None  # Return None if no valid permutations are found
+    integers = [int(''.join(perm)) for perm in valid_permutations]
     return integers
 
 def calculate_and_display():
-    K = int(entry_K.get())
-    digits = [entry_digits[i].get() for i in range(K)]
+    digits = [digit_entry.get() for digit_entry in entry_digits if digit_entry.get() != '']
     S = int(entry_S.get())
 
-    # Алгоритмический подход
-    start_time_algorithmic = time.time()
-    integers_algorithmic = generate_integers_algorithmic(digits, S)
-    end_time_algorithmic = time.time()
+    start_time = time.time()
+    integers = generate_integers(digits, S)
+    end_time = time.time()
 
-    # Подход с использованием функций Python
-    start_time_pythonic = time.time()
-    integers_pythonic = generate_integers_pythonic(digits, S)
-    end_time_pythonic = time.time()
-
-    result_text = f"Все возможные целые числа (алгоритмический подход):\n{integers_algorithmic}\nВремя выполнения алгоритмического подхода: {end_time_algorithmic - start_time_algorithmic:.6f} секунд\n\n"
-    result_text += f"Все возможные целые числа (подход с использованием функций Python):\n{integers_pythonic}\nВремя выполнения подхода с использованием функций Python: {end_time_pythonic - start_time_pythonic:.6f} секунд\n\n"
-    result_text += f"Максимальное целое число: {max(integers_algorithmic)}"
+    if integers is None:
+        result_text = "Невозможно составить такую последовательность цифр с заданной минимальной суммой."
+    else:
+        result_text = f"Все возможные целые числа:\n{integers}\n\n"
+        result_text += f"Время выполнения: {end_time - start_time:.6f} секунд\n\n"
+        result_text += f"Максимальное целое число: {max(integers)}"
 
     output_text.config(state='normal')
     output_text.delete('1.0', 'end')
     output_text.insert('end', result_text)
     output_text.config(state='disabled')
 
+def create_digit_entries():
+    try:
+        K = int(entry_K.get())
+        for entry in entry_digits:
+            entry.destroy()
+        entry_digits.clear()
+
+        for i in range(K):
+            entry = Entry(digits_window)
+            entry.grid(row=1, column=i)
+            entry_digits.append(entry)
+    except ValueError:
+        print("Введите корректное число.")
+
 # Создание главного окна
 root = Tk()
 root.title("Генерация чисел")
 
-# Поля ввода
+# Создание окна для ввода количества цифр
+digits_window = Toplevel(root)
+digits_window.title("Введите цифры")
+
+# Поля ввода количества цифр
 Label(root, text="Введите количество цифр:").grid(row=0, column=0)
 entry_K = Entry(root)
 entry_K.grid(row=0, column=1)
+Button(root, text="Подтвердить", command=create_digit_entries).grid(row=0, column=2)
 
-Label(root, text="Введите цифры:").grid(row=1, column=0)
-entry_digits = []
-for i in range(9):  # Максимум 9 цифр
-    entry_digits.append(Entry(root))
-    entry_digits[i].grid(row=1, column=i+1)
+entry_digits = []  # Список для хранения Entry цифр
+
+Label(digits_window, text="Введите цифры:").grid(row=0, column=0, columnspan=10)
 
 Label(root, text="Введите минимальную сумму цифр:").grid(row=2, column=0)
 entry_S = Entry(root)
 entry_S.grid(row=2, column=1)
 
 # Кнопка вычисления
-Button(root, text="Вычислить", command=calculate_and_display).grid(row=3, column=0, columnspan=2)
+Button(root, text="Вычислить", command=calculate_and_display).grid(row=3, column=0, columnspan=3)
 
 # Поле вывода результатов
 output_text = Text(root, height=10, width=50)
-output_text.grid(row=4, column=0, columnspan=10)
+output_text.grid(row=4, column=0, columnspan=3)
 output_text.config(state='disabled')
 
 # Скроллбар для текстового поля
 scrollbar = Scrollbar(root)
-scrollbar.grid(row=4, column=10, sticky='ns')
+scrollbar.grid(row=4, column=3, sticky='ns')
 scrollbar.config(command=output_text.yview)
 output_text.config(yscrollcommand=scrollbar.set)
 
